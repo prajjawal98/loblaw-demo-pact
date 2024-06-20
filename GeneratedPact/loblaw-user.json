@@ -1,0 +1,59 @@
+{
+  "consumer": {
+    "name": "loblaw"
+  },
+  "provider": {
+    "name": "user"
+  },
+  "messages": [
+    {
+      "description": "a user created message",
+      "metaData": {
+        "contentType": "application/json"
+      },
+      "contents": {
+        "layout": {
+          "typeId": "productListingPageLayout",
+          "sections": {
+            "productListingSection": {}
+          }
+        },
+        "viewMetaData": {
+          "canonicalUrlSlug": "/food/fruits-vegetables/fresh-vegetables/c/28195",
+          "description": "Browse products in Fresh Vegetables on loblaw near you. Schedule Delivery or Pickups Online. Subject to Availability.",
+          "addMetaNoRobots": false,
+          "jsonLd": null,
+          "headline": "Fresh Vegetables - Shop for Fruits & Vegetables Products Online | loblaw"
+        },
+        "contentId": null,
+        "categoryDisplayName": "Fresh Vegetables",
+        "theme": {
+          "name": "pcx-web-pcx",
+          "env": "production",
+          "version": "latest"
+        },
+        "categoryId": "28195"
+      },
+      "matchingRules": {
+        "body": {
+          "$.viewMetaData.addMetaNoRobots": {
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ],
+            "combine": "AND"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    },
+    "pact-jvm": {
+      "version": "4.0.10"
+    }
+  }
+}
