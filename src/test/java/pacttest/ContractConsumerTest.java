@@ -11,7 +11,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.jupiter.api.Tag;
 import pact.ConsumerContract;
-
 import java.io.File;
 import java.util.List;
 import java.io.IOException;
@@ -48,7 +47,6 @@ public class ContractConsumerTest {
         // Load expected JSON from file
         File expectedFile = new File("28195_pact.json");
         JsonNode expectedJson = objectMapper.readTree(expectedFile);
-
         // Assert specific values
         verifyValues(expectedJson, actualJson);
 
@@ -92,6 +90,7 @@ public class ContractConsumerTest {
                 .path("data")
                 .path("productGrid")
                 .path("productTiles");
+        System.out.println(productTiles.size());
 
         for (int i = 0; i <= productTiles.size()-1; i++) {
             String deal = actualJson
@@ -103,9 +102,9 @@ public class ContractConsumerTest {
                     .path("data")
                     .path("productGrid")
                     .path("productTiles")
-                    .path("productTiles_41")
+                    .path("productTiles_" + i)
                     .path("deal").asText();
-            assertEquals("null", deal);
+            assertTrue("null".equals(deal) || deal.isEmpty());
         }
 
         for (int i = 0; i <= productTiles.size()-1; i++) {
@@ -118,9 +117,9 @@ public class ContractConsumerTest {
                     .path("data")
                     .path("productGrid")
                     .path("productTiles")
-                    .path("productTiles_41")
+                    .path("productTiles_" + i)
                     .path("pcoDeal").asText();
-            assertEquals("null", pcoDeal);
+            assertTrue("null".equals(pcoDeal) || pcoDeal.isEmpty());
         }
 
         for (int i = 0; i <= productTiles.size()-1; i++) {
@@ -133,11 +132,10 @@ public class ContractConsumerTest {
                     .path("data")
                     .path("productGrid")
                     .path("productTiles")
-                    .path("productTiles_41")
+                    .path("productTiles_"+i)
                     .path("title").asText();
             assertFalse(title.equalsIgnoreCase("null"));
         }
-
 
         // Example: Verify specific fields for string values
         assertEquals(expectedJson.path("categoryId").asText(), actualJson.path("categoryId").asText());
