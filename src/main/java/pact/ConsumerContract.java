@@ -1,6 +1,7 @@
 package pact;
 
 import au.com.dius.pact.consumer.MessagePactBuilder;
+import au.com.dius.pact.consumer.dsl.PactDslJsonArray;
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
 import au.com.dius.pact.core.model.messaging.MessagePact;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class ConsumerContract {
@@ -34,6 +36,8 @@ public class ConsumerContract {
                 PactDslJsonBody nestedBody = new PactDslJsonBody();
                 processJson((Map<String, Object>) value, nestedBody);
                 body.object(key, nestedBody);
+            } else if (value instanceof List) {
+                processJsonArray((List<Object>) value, body, key);
             } else if (value instanceof Number) {
                 body.numberType(key, (Number) value);
             } else if (value instanceof Boolean) {
@@ -46,6 +50,30 @@ public class ConsumerContract {
                 // Handle other types if needed
             }
         }
+    }
+
+    private static void processJsonArray(List<Object> list, PactDslJsonBody body, String key) {
+        PactDslJsonBody arrayObject = new PactDslJsonBody();
+
+        int index = 0;
+        for (Object item : list) {
+            String arrayKey = key + "_" + index;
+            if (item instanceof Map) {
+                PactDslJsonBody nestedBody = new PactDslJsonBody();
+                processJson((Map<String, Object>) item, nestedBody);
+                arrayObject.object(arrayKey, nestedBody);
+            } else if (item instanceof Number) {
+                arrayObject.numberType(arrayKey, (Number) item);
+            } else if (item instanceof Boolean) {
+                arrayObject.booleanType(arrayKey, (Boolean) item);
+            } else if (item instanceof String) {
+                arrayObject.stringValue(arrayKey, (String) item);
+            } else if (item == null) {
+                arrayObject.nullValue(arrayKey);
+            }
+            index++;
+        }
+        body.object(key, arrayObject);
     }
 
     public static Map<String, Object> getStringObjectMap(MessagePact contract) throws JsonProcessingException {
